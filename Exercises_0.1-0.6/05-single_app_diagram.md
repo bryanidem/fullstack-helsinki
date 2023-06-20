@@ -30,4 +30,6 @@ Diagram in which I'm trayting to explain the situation where the user goes into 
     server-->>browser: [{"content": "Hello", "date": "2023-06-19"}, ...]
     deactivate server
 
+    note right of browser: The browser executes the callback function that renders the notes
+
 ```
