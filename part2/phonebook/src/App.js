@@ -45,29 +45,51 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with{" "}
-        <input value={searchTerm} onChange={handleSearchTermChange} />
-      </div>
+      <Filter
+        searchTerm={searchTerm}
+        handleSearchTermChange={handleSearchTermChange}
+      />
       <h2>Add a new</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm
+        handleSubmit={handleSubmit}
+        newName={newName}
+        handleNameChange={handleNameChange}
+        newNumber={newNumber}
+        handleNumberChange={handleNumberChange}
+      />
       <h2>Numbers</h2>
-      <Display persons={filteredPersons} />
+      <Persons persons={filteredPersons} />
     </div>
   );
 };
 
-const Display = ({ persons }) => {
+const PersonForm = (props) => {
+  return (
+    <form onSubmit={props.handleSubmit}>
+      <div>
+        name: <input value={props.newName} onChange={props.handleNameChange} />
+      </div>
+      <div>
+        number:{" "}
+        <input value={props.newNumber} onChange={props.handleNumberChange} />
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  );
+};
+
+const Filter = (props) => {
+  return (
+    <div>
+      filter shown with{" "}
+      <input value={props.searchTerm} onChange={props.handleSearchTermChange} />
+    </div>
+  );
+};
+
+const Persons = ({ persons }) => {
   return (
     <ul>
       {persons.map((person) => (
