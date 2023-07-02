@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-// import axios from "axios";
 import personService from "./services/persons";
+import persons from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -27,6 +27,18 @@ const App = () => {
   const filteredPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const deletePerson = (id, name) => {
+    const filteredPersons = persons.filter((person) => person.id !== id);
+
+    if (window.confirm(`Are you sure you want to remove ${name}`)) {
+      personService
+        .remove(id)
+        .then((response) => console.log(response))
+        .catch((error) => console.log(error));
+      setPersons(filteredPersons);
+    }
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -63,7 +75,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} handleDelete={deletePerson} />
     </div>
   );
 };
@@ -94,12 +106,15 @@ const Filter = (props) => {
   );
 };
 
-const Persons = ({ persons }) => {
+const Persons = ({ persons, handleDelete }) => {
   return (
     <ul>
       {persons.map((person) => (
         <li key={person.name}>
           {person.name} - {person.number}
+          <button onClick={() => handleDelete(person.id, person.name)}>
+            delete
+          </button>
         </li>
       ))}
     </ul>
