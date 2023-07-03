@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import personService from "./services/persons";
-import persons from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -42,8 +41,28 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const personExists = persons.some((person) => person.name === newName);
-    if (!personExists) {
+    const personExists = persons.filter((person) => person.name === newName)[0];
+    if (personExists) {
+      if (
+        window.confirm(
+          `${personExists.name} is already added to the phonebook, you want to replace the old number ${personExists.number} for the new one ${newNumber}?`
+        )
+      ) {
+        personService
+          .update(personExists.id, {
+            ...personExists,
+            number: newNumber,
+          })
+          .then((response) => {
+            const personsEdited = [...persons];
+            personsEdited[personsEdited.indexOf(personExists)].number =
+              response.number;
+            setPersons(personsEdited);
+            setNewName("");
+            setNewNumber("");
+          });
+      }
+    } else {
       const newObject = {
         name: newName,
         number: newNumber,
@@ -54,8 +73,6 @@ const App = () => {
         setNewName("");
         setNewNumber("");
       });
-    } else {
-      alert(`${newName} is already added to phonebook`);
     }
   };
 
