@@ -46,6 +46,7 @@ const App = () => {
         .then((response) => console.log(response))
         .catch((error) => console.log(error));
       setPersons(filteredPersons);
+      setMessage(`Information of ${name} has already been removed from server`);
     }
   };
 
@@ -152,17 +153,25 @@ const Persons = ({ persons, handleDelete }) => {
 };
 
 const Notification = ({ message }) => {
-  const notificationStyle = {
+  let notificationStyle = {
     color: "green",
-    background: "lightgrey",
     border: "2px solid green",
+    background: "lightgrey",
     padding: "10px",
     fontSize: "22px",
     margin: "10px 0",
   };
 
+  const errorNotification = {
+    color: "red",
+    border: "2px solid red",
+  };
+
   if (message === null) {
     return null;
+  } else if (message.includes("removed")) {
+    notificationStyle = { ...notificationStyle, ...errorNotification };
+    return <div style={notificationStyle}>{message}</div>;
   } else {
     return <div style={notificationStyle}>{message}</div>;
   }
