@@ -6,10 +6,20 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((response) => setPersons(response));
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMessage(null);
+    }, 2000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [message]);
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -60,6 +70,7 @@ const App = () => {
             setPersons(personsEdited);
             setNewName("");
             setNewNumber("");
+            setMessage(`${response.name} number has been edited`);
           });
       }
     } else {
@@ -72,6 +83,7 @@ const App = () => {
         setPersons(persons.concat(response));
         setNewName("");
         setNewNumber("");
+        setMessage(`${response.name} has been Added to the phonebook`);
       });
     }
   };
@@ -79,6 +91,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter
         searchTerm={searchTerm}
         handleSearchTermChange={handleSearchTermChange}
@@ -136,6 +149,23 @@ const Persons = ({ persons, handleDelete }) => {
       ))}
     </ul>
   );
+};
+
+const Notification = ({ message }) => {
+  const notificationStyle = {
+    color: "green",
+    background: "lightgrey",
+    border: "2px solid green",
+    padding: "10px",
+    fontSize: "22px",
+    margin: "10px 0",
+  };
+
+  if (message === null) {
+    return null;
+  } else {
+    return <div style={notificationStyle}>{message}</div>;
+  }
 };
 
 export default App;
