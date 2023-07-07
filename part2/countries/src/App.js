@@ -30,12 +30,16 @@ function App() {
   return (
     <>
       <Display loading={loading} search={search} onChange={handleChange} />
-      <Results countries={filteredSearch} />
+      <Results
+        countries={filteredSearch}
+        setSearch={setSearch}
+        setFilteredSearch={setFilteredSearch}
+      />
     </>
   );
 }
 
-const Results = ({ countries }) => {
+const Results = ({ countries, setSearch, setFilteredSearch }) => {
   if (countries.length === 1) {
     return <CountryInfo country={countries[0]} />;
   } else if (countries.length > 10) {
@@ -44,7 +48,17 @@ const Results = ({ countries }) => {
     return (
       <ul>
         {countries.map((country) => (
-          <li key={country.name.common}>{country.name.common}</li>
+          <li key={country.name.common}>
+            {country.name.common}{" "}
+            <button
+              onClick={() => {
+                setSearch(country.name.common);
+                setFilteredSearch([country]);
+              }}
+            >
+              show
+            </button>
+          </li>
         ))}
       </ul>
     );
